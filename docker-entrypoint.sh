@@ -16,6 +16,14 @@ fi
 # Import mental_health_portal.sql once via Railway's MySQL "Data" tab
 # or the Railway CLI (see deployment instructions).
 
+# Railway can re-enable extra Apache MPM modules at container startup,
+# causing "More than one MPM loaded". Force only mpm_prefork right
+# before Apache actually starts, so this survives that.
+a2dismod mpm_event 2>/dev/null || true
+a2dismod mpm_worker 2>/dev/null || true
+rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.* 2>/dev/null || true
+a2enmod mpm_prefork 2>/dev/null || true
+
 php artisan config:cache
 php artisan route:cache
 

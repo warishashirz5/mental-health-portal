@@ -5,8 +5,7 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev libpng-dev libonig-dev libxml2-dev \
     && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl gd \
-    && a2enmod rewrite \
-    && a2dismod mpm_event 2>/dev/null; a2dismod mpm_worker 2>/dev/null; a2enmod mpm_prefork
+    && a2enmod rewrite
 # Point Apache at Laravel's public/ folder
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
